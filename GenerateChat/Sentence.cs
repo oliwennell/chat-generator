@@ -4,21 +4,21 @@ using System.Linq;
 
 namespace GetSlackMessages
 {
-    public class Phrase
+    public class Sentence
     {
-        private string actualPhrase;
+        private string actualSentence;
 
-        public static implicit operator string(Phrase p)
+        public static implicit operator string(Sentence p)
         {
-            return p.actualPhrase;
+            return p.actualSentence;
         }
 
-        private Phrase(string phrase)
+        private Sentence(string sentence)
         {
-            actualPhrase = phrase;
+            actualSentence = sentence;
         }
 
-        public static Phrase GenerateFrom(MarkovChain chain)
+        public static Sentence GenerateFrom(MarkovChain chain)
         {
             var nodes = new List<Node>();
 
@@ -34,8 +34,15 @@ namespace GetSlackMessages
             }
 
             var result = String.Join(" ", nodes.Select(n => n.Word));
-            if (!result.EndsWith("!") && !result.EndsWith("?")) result = result + ".";
-            return new Phrase(result); 
+            if (SentenceRequiresFullStop(result)) result = result + ".";
+            return new Sentence(result); 
+        }
+
+        private static bool SentenceRequiresFullStop(string result)
+        {
+            return !result.EndsWith("!") 
+                && !result.EndsWith("?") 
+                && !result.EndsWith(".");
         }
     }
 }

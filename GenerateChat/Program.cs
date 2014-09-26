@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,7 +24,7 @@ namespace GetSlackMessages
             //markovChain.Nodes.ToList()
             //    .ForEach(n => Console.WriteLine("\"{0}\" links to {1}", n.Word, n.Links.Count));
 
-            Console.WriteLine(Phrase.GenerateFrom(markovChain));
+            Console.WriteLine(Sentence.GenerateFrom(markovChain));
 
             Console.ReadLine();
             return 0;
@@ -44,7 +43,7 @@ namespace GetSlackMessages
 
         private static bool ShouldIncludeWord(string word)
         {
-            if (!word.Any(c => Char.IsLetter(c))) return false;
+            if (!word.Any(Char.IsLetter)) return false;
             if (word.Any(c => c == '<' || c == '>')) return false;
 
             return true;

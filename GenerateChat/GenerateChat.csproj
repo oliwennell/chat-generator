@@ -43,7 +43,7 @@
   <ItemGroup>
     <Compile Include="MarkovChain.cs" />
     <Compile Include="Node.cs" />
-    <Compile Include="Phrase.cs" />
+    <Compile Include="Sentence.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
