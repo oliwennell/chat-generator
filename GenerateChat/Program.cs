@@ -10,8 +10,10 @@ namespace GetSlackMessages
     {
         public static int Main(string[] args)
         {
-            var data = JsonConvert.DeserializeObject<dynamic>(File.ReadAllText("data.json"));
-            var messages = (data.messages as IEnumerable<dynamic>)
+            var data1 = JsonConvert.DeserializeObject<dynamic>(File.ReadAllText("data.json")).messages as IEnumerable<dynamic>;
+            var data2 = JsonConvert.DeserializeObject<dynamic>(File.ReadAllText("data2.json")).messages as IEnumerable<dynamic>;
+
+            var messages = (data1.Union(data2))
                 .Where(d => d.text != null)
                 .Select(d => d.text.Value)
                 .Cast<string>();
@@ -21,10 +23,19 @@ namespace GetSlackMessages
                 .WithFilter(ShouldIncludeWord)
                 .Build();
 
-            //markovChain.Nodes.ToList()
-            //    .ForEach(n => Console.WriteLine("\"{0}\" links to {1}", n.Word, n.Links.Count));
+            var random = new Random();
+            for (int i=0; i<10; ++i)
+            {
+                int numberOfWordsInSentence = random.Next(7, 30);
 
-            Console.WriteLine(Sentence.GenerateFrom(markovChain));
+                var sentence = new Sentence()
+                    .WithChain(markovChain)
+                    .WithNumberOfWords(numberOfWordsInSentence)
+                    .Build(random);
+
+                Console.WriteLine(sentence);
+                Console.WriteLine();
+            }
 
             Console.ReadLine();
             return 0;
@@ -32,8 +43,7 @@ namespace GetSlackMessages
 
         private static string ConvertWord(string word)
         {
-            if (word.Last() == '.')
-                word = new string(word.Take(word.Length - 1).ToArray());
+            if (word.Last() == '.') word = new string(word.Take(word.Length - 1).ToArray());
 
             return word
                 .Replace("\r", "")

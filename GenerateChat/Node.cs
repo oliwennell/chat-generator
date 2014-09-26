@@ -9,30 +9,27 @@ namespace GetSlackMessages
     {
         public string Word { get; private set; }
 
-        private Dictionary<Node, int> links = new Dictionary<Node, int>();
-        public IReadOnlyDictionary<Node, int> Links { get; private set; }
-
-        private List<KeyValuePair<float, Node>> weightedLinks;
+        private Dictionary<Node, int> linksByFrequency = new Dictionary<Node, int>();
+        private List<KeyValuePair<float, Node>> linksByProbability;
 
         public Node(string word)
         {
             Word = word;
-            Links = new ReadOnlyDictionary<Node, int>(links);
         }
 
         public Node PickTransition(Random random)
         {
-            if (weightedLinks == null) weightedLinks = GenerateWeightedLinks(links);
+            if (linksByProbability == null) linksByProbability = GenerateWeightedLinks(linksByFrequency);
 
             var transitionScalar = random.NextDouble();
 
-            KeyValuePair<float,Node> item = weightedLinks[0];
+            KeyValuePair<float,Node> item = linksByProbability[0];
             var index = 0;
             var weight = 0.0f;
-            while (weight < transitionScalar)
+            while (weight < transitionScalar && index < linksByProbability.Count)
             {
                 weight += item.Key;
-                item = weightedLinks[index++];
+                item = linksByProbability[index++];
             }
             return item.Value;
         }
@@ -51,8 +48,8 @@ namespace GetSlackMessages
 
         public void LinkTo(Node node)
         {
-            if (!links.ContainsKey(node)) links.Add(node, 0);
-            links[node]++;
+            if (!linksByFrequency.ContainsKey(node)) linksByFrequency.Add(node, 0);
+            linksByFrequency[node]++;
         }
     }
 }
