@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace GenerateChat
 {
-    public class MarkovChain
+    public class Graph
     {
         private Func<string, bool> filterFunc = (s) => { return true; };
         private Func<string, string> conversionFunc = (s) => { return s; };
@@ -16,26 +16,26 @@ namespace GenerateChat
             get { return nodesByWord.Values; }
         }
 
-        public static MarkovChain FromPhrases(IEnumerable<string> phrases)
+        public static Graph FromPhrases(IEnumerable<string> phrases)
         {
-            var result = new MarkovChain();
+            var result = new Graph();
             result.inputPhrases = phrases.ToList();
             return result;
         }
 
-        public MarkovChain WithFilter(Func<string,bool> filter)
+        public Graph WithFilter(Func<string,bool> filter)
         {
             filterFunc = filter;
             return this;
         }
 
-        public MarkovChain WithConversion(Func<string, string> conversion)
+        public Graph WithConversion(Func<string, string> conversion)
         {
             conversionFunc = conversion;
             return this;
         }
 
-        public MarkovChain Build()
+        public Graph Build()
         {
             var words = inputPhrases.SelectMany(p => p.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
                 .Where(w => filterFunc(w))

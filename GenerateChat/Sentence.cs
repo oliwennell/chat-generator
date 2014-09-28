@@ -8,7 +8,7 @@ namespace GenerateChat
     {
         private string actualSentence;
         private int numberOfWords;
-        private MarkovChain chain;
+        private Graph chain;
 
         public static implicit operator string(Sentence p)
         {
@@ -28,7 +28,7 @@ namespace GenerateChat
             return this;
         }
 
-        public Sentence WithChain(MarkovChain chain)
+        public Sentence WithChain(Graph chain)
         {
             this.chain = chain;
             return this;

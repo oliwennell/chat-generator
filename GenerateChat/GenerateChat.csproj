@@ -41,7 +41,7 @@
     <Reference Include="System.Net.Http.WebRequest" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MarkovChain.cs" />
+    <Compile Include="Graph.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Sentence.cs" />
     <Compile Include="Program.cs" />

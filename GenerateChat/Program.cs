@@ -18,7 +18,7 @@ namespace GenerateChat
                 .Select(d => d.text.Value)
                 .Cast<string>();
 
-            var markovChain = MarkovChain.FromPhrases(messages)
+            var markovChain = Graph.FromPhrases(messages)
                 .WithConversion(ConvertWord)
                 .WithFilter(ShouldIncludeWord)
                 .Build();
