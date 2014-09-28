@@ -7,8 +7,8 @@
     <ProjectGuid>{7501024E-E6E1-4AE2-BDE7-B87C73B7AADC}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GetSlackMessages</RootNamespace>
-    <AssemblyName>GetSlackMessages</AssemblyName>
+    <RootNamespace>GenerateChat</RootNamespace>
+    <AssemblyName>GenerateChat</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
