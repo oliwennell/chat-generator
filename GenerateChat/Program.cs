@@ -8,33 +8,37 @@ namespace GenerateChat
 {
     public class Program
     {
+        private const int numSentencesToGenerate = 20;
+
         public static int Main(string[] args)
         {
-            var data1 = JsonConvert.DeserializeObject<dynamic>(File.ReadAllText("data.json")).messages as IEnumerable<dynamic>;
-            var data2 = JsonConvert.DeserializeObject<dynamic>(File.ReadAllText("data2.json")).messages as IEnumerable<dynamic>;
+            //var data1 = JsonConvert.DeserializeObject<dynamic>(File.ReadAllText("data.json")).messages as IEnumerable<dynamic>;
+            //var data2 = JsonConvert.DeserializeObject<dynamic>(File.ReadAllText("data2.json")).messages as IEnumerable<dynamic>;
+            //var phrases = (data1.Union(data2))
+            //    .Where(d => d.text != null)
+            //    .Select(d => d.text.Value)
+            //    .Cast<string>();
 
-            var messages = (data1.Union(data2))
-                .Where(d => d.text != null)
-                .Select(d => d.text.Value)
-                .Cast<string>();
+            var phrases = Directory.GetFiles(Directory.GetCurrentDirectory(), "input*.txt")
+                .SelectMany(f => File.ReadAllLines(f));
 
-            var markovChain = Graph.FromPhrases(messages)
+            var graph = Graph.FromPhrases(phrases)
                 .WithConversion(ConvertWord)
                 .WithFilter(ShouldIncludeWord)
                 .Build();
 
             var random = new Random();
-            for (int i=0; i<10; ++i)
+            for (int i=0; i<numSentencesToGenerate; ++i)
             {
-                int numberOfWordsInSentence = random.Next(7, 30);
+                int numberOfWordsInSentence = random.Next(3, 15);
 
                 var sentence = new Sentence()
-                    .WithChain(markovChain)
+                    .WithChain(graph)
                     .WithNumberOfWords(numberOfWordsInSentence)
                     .Build(random);
 
+                Console.WriteLine("");
                 Console.WriteLine(sentence);
-                Console.WriteLine();
             }
 
             Console.ReadLine();
@@ -53,6 +57,7 @@ namespace GenerateChat
 
         private static bool ShouldIncludeWord(string word)
         {
+            if (word.All(c => Char.IsUpper(c))) return false; // Probably copyright notice etc.
             if (!word.Any(Char.IsLetter)) return false;
             if (word.Any(c => c == '<' || c == '>')) return false;
 
